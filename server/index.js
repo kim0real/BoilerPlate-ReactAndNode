@@ -1,7 +1,7 @@
 //백앤드 시작점
 const express = require('express') //package.json의 express 모듈을 가져온다.
 const app = express() // express앱 생성
-const port = 3000 // 포트, 임의로 설정 가능
+const port = 5000 // 포트, 임의로 설정 가능
 const bodyParser = require('body-parser');
 const config = require('./config/key')
 const {User} = require("./models/User");
@@ -9,7 +9,7 @@ const {auth} = require("./middleware/auth");
 const cookieParser = require('cookie-parser');
 
 //application/x-www-form-urlencoded
-app.use(bodyParser.urlencoded({extended:true}));
+app.use(bodyParser.urlencoded({extended:true})); 
 
 //application/json
 app.use(bodyParser.json());
@@ -31,9 +31,9 @@ app.post('/api/users/register', (req, res) =>{
     //회원가입할때 필요한 정보들을 client에서 가져오면 
     //그것들을 데이터베이스에 넣어준다.
     const user = new User(req.body)
-
+    //유저 모델(데이터베이스)에 저장
     user.save((err, userInfo) => {
-        console.log("userInfo:"+userInfo)
+        //console.log("userInfo:"+userInfo)
         if(err) {
             return res.json({success : false, err})
         }
@@ -44,7 +44,6 @@ app.post('/api/users/register', (req, res) =>{
 })
 
 app.post('/api/users/login', (req, res) =>{
-
     //요청된 이메일이 디비에 있는지 찾는다.
     User.findOne({email : req.body.email}, (err, user) => {
         if(!user){
@@ -87,8 +86,8 @@ app.get('/api/users/auth', auth, (req, res) => {
         email : req.user.email,
         name : req.user.name,
         lastname : req.user.lastname,
-        role : req.uesr.role,
-        iamge : req.user.image
+        role : req.user.role,
+        image : req.user.image
     })
 })
 
@@ -108,3 +107,6 @@ app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`)
 })
 
+app.get('/api/hello', (req,res) => {
+    res.send("통신 성공");
+})

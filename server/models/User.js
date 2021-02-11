@@ -6,7 +6,7 @@ const jwt = require('jsonwebtoken')
 const userScheme = mongoose.Schema({
     name : {
         type : String,
-        minlength : 5
+        minlength : 3
     },
     email : {
         type : String,
@@ -52,7 +52,8 @@ userScheme.pre('save', function(next){
     }
 })
 
-userScheme.methods.comparePassword = function(plainPassword, cb){
+userScheme.methods.comparePassword = function(plainPassword, cb){ // cb : callback
+    //plainPassword을 암호화한 후 DB의 암호화된 비밀번호와 비교한다.
     bcrypt.compare(plainPassword, this.password, function(err, isMatch){
         if(err) return cb(err)
         cb(null, isMatch) // else문 true
